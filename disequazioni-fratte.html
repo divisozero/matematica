@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Disequazioni fratte · lo schema dei segni</title>
+<script>
+  // telefono o tablet in verticale: la pagina diventa una colonna che scorre
+  (function(){
+    var q = new URLSearchParams(location.search);
+    var mq = matchMedia('(max-width: 899px), (max-aspect-ratio: 11/10), (max-height: 520px)');
+    window.MOB = function(){
+      var m = q.has('mob') ? true : q.has('lim') ? false : mq.matches;
+      document.documentElement.classList.toggle('mob', m);
+      return m;
+    };
+    MOB();
+  })();
+</script>
 <!--
   Lezione per la LIM sulle disequazioni fratte (classe seconda), un solo file, senza rete.
   Dieci schermate a tutta pagina; i passi di ogni schermata si svelano uno alla volta.
@@ -15,7 +28,13 @@
     ?p=K       con K passi già svelati        ?tutto   tutti i passi svelati
     ?e=N       nella schermata «Prova tu» apre l'esercizio N      ?risolto  lo mostra risolto
     ?statico   spegne animazioni e transizioni (per gli screenshot)
+    ?mob / ?lim  forzano la versione da telefono o quella da LIM
     ?verifica  controlla sforamenti e coerenza degli esercizi; l'esito finisce nel titolo
+
+  Due impaginazioni nello stesso file. Su LIM, computer e tablet in orizzontale: schermate fisse
+  a tutta pagina. Su telefono e tablet in verticale (classe «mob» su <html>, la decide lo script
+  qui sotto): una colonna che scorre, i passi compaiono uno alla volta e la pagina li segue;
+  sotto i 640 px di larghezza i disegni usano una geometria più stretta e più alta (STRETTO()).
 
   Colori: arancio = positivo (linea piena), blu = negativo (linea tratteggiata), verde = soluzione.
   Tutti gli schemi dei segni sono disegnati dalla stessa funzione schema(), a partire dai
@@ -285,6 +304,121 @@
   .sotto-palco{display:flex;align-items:center;gap:1rem;min-height:3.2rem}
   .sotto-palco .msg{flex:1;font-size:1.15rem;font-weight:700}
 
+  /* ============ telefono e tablet in verticale: una colonna che scorre ============ */
+  html.mob{font-size:clamp(15px, calc(8px + 2.1vw), 21px)}
+  html.mob body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  html.mob .schermi{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  html.mob .screen{position:static;width:100%;max-width:46rem;margin:0 auto;padding:1.2rem 1.1rem 2.4rem;gap:.9rem}
+  html.mob h2{font-size:1.7rem}
+  html.mob .kicker{font-size:.72rem}
+  html.mob .kicker b{min-width:1.6rem;height:1.6rem;font-size:.85rem}
+  html.mob .body{display:flex;flex-direction:column;gap:.9rem;flex:none}
+  /* le due colonne si sciolgono: i loro pezzi si mettono in fila, e «m-fondo» manda un pezzo dopo il disegno */
+  html.mob .testo,html.mob .stage{display:contents;font-size:1.05rem}
+  html.mob .stage>*{order:1}
+  html.mob .m-fondo{order:2}
+  html.mob .passo:not(.su){display:none}
+  html.mob .passo.su{animation:compare .4s ease both}
+  html.mob .stage svg.main,html.mob .palco svg,html.mob #svg1{flex:none;width:100%;height:auto;margin-top:0}
+  html.mob .eq{font-size:2rem}
+  html.mob .card{padding:.7rem .9rem}
+  html.mob .btn{font-size:1rem;padding:.55rem 1rem}
+  html.mob nav{height:3.5rem;padding:0 .8rem .3rem;gap:.6rem}
+  html.mob nav .freccia{height:2.6rem;padding:0 1rem;font-size:1rem}
+  html.mob .dove{display:none}
+  html.mob .pallini{flex:1;justify-content:center;gap:.38rem;min-width:0}
+  html.mob .pallini button{width:.6rem;height:.6rem;border-width:.1rem}
+  html.mob .pallini button.qui{width:1.5rem}
+  /* copertina */
+  html.mob .cop{display:flex;flex-direction:column;align-items:stretch;gap:1.6rem;flex:none}
+  html.mob .cop h1{font-size:clamp(2.3rem, 11.5vw, 4.6rem);margin:.8rem 0 .9rem}
+  html.mob .cop .sotto{font-size:1.2rem;margin-bottom:1.2rem}
+  html.mob .idee{font-size:1.05rem}
+  html.mob .idee li>b:first-child{width:1.8rem;height:1.8rem;font-size:.95rem}
+  html.mob .manifesto{padding:1.3rem 1rem;gap:.9rem;border-width:.16rem;box-shadow:.4rem .4rem 0 var(--ink);margin-right:.4rem}
+  html.mob .manifesto .segni{font-size:1.9rem;gap:1rem}
+  html.mob .manifesto .sbarra{width:5.5rem;height:.35rem}
+  html.mob .manifesto .ug{font-size:2.6rem}
+  html.mob .manifesto .eq{font-size:2.1rem}
+  html.mob .manifesto p{font-size:1rem}
+  /* 1 */
+  html.mob .calc{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.3rem;padding:.8rem;min-height:0}
+  html.mob .calc-x{font-size:1.8rem}
+  html.mob .calc-f{font-size:1.75rem}
+  html.mob .calc-e{font-size:1.15rem;min-width:11.5rem;justify-content:center}
+  html.mob .calc-e small{font-size:.85rem}
+  html.mob .comandi{flex-wrap:wrap;justify-content:center;gap:.6rem}
+  html.mob .comandi .scorri{flex:1 1 100%}
+  /* 2 */
+  html.mob .riga2{grid-template-columns:auto auto auto;justify-content:space-between;gap:.6rem .5rem;padding:.8rem .9rem}
+  html.mob .riga2>.m{font-size:1.5rem}
+  html.mob .per{font-size:.95rem;padding:.5rem .7rem;white-space:nowrap}
+  html.mob .esito{grid-column:1/-1;font-size:1.05rem}
+  html.mob .dipende{grid-template-columns:1fr;gap:.5rem}
+  html.mob .dipende div{font-size:1.2rem;padding:.55rem}
+  html.mob .striscione{font-size:1.25rem;padding:1rem}
+  /* 3 */
+  html.mob .macchina{display:flex;flex-direction:column;align-items:stretch;gap:1.3rem;padding:1rem;flex:none}
+  html.mob .leve{gap:.8rem}
+  html.mob .leva{flex-direction:row;align-items:center;justify-content:space-between;gap:.6rem;font-size:1rem;white-space:normal}
+  html.mob .tg{width:3.6rem;height:2.9rem;font-size:1.8rem;border-radius:.7rem}
+  html.mob .esito3{flex-wrap:wrap;gap:.5rem .9rem}
+  html.mob .esito3 .pila{font-size:1.6rem;gap:.55rem}
+  html.mob .esito3 .sbarra{width:4.6rem;height:.32rem}
+  html.mob .esito3 .ug{font-size:2.2rem}
+  html.mob .esito3 .ris{font-size:2.2rem}
+  html.mob .parole3{font-size:.95rem}
+  html.mob .parole3 b{font-size:1.35rem}
+  html.mob .parole3 .m{font-size:1.25rem}
+  html.mob .quattro{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+  html.mob .quattro div{font-size:.78rem;gap:.35rem;padding:.6rem .2rem}
+  html.mob .zeri3{grid-template-columns:1fr;gap:.6rem}
+  html.mob .zeri3 div{font-size:1rem}
+  /* 4 */
+  html.mob .lettura{font-size:1.15rem;white-space:normal;min-height:0}
+  /* 5 e 7 */
+  html.mob ol.mosse .conto{font-size:1.25rem}
+  html.mob .esse{font-size:1.3rem}
+  html.mob .catena{flex-direction:column;align-items:flex-start;gap:.7rem;min-height:0}
+  html.mob .catena .eq{font-size:1.5rem}
+  /* 6 */
+  html.mob .scegli{gap:.5rem}
+  html.mob .scegli .eq{font-size:1.7rem}
+  html.mob .versi{gap:.3rem}
+  html.mob .versi button{width:2.4rem;height:2.4rem;font-size:1.4rem;border-radius:.6rem}
+  html.mob .risposta{font-size:1.05rem;min-height:0}
+  /* 8 */
+  html.mob .ricetta{grid-template-columns:1fr;gap:1rem;margin:0 .35rem 0 0}
+  html.mob .mossa{min-height:0;font-size:1.05rem;padding:.9rem 1rem 1rem;gap:.4rem;box-shadow:.3rem .3rem 0 var(--ink)}
+  html.mob .mossa .n{font-size:2.2rem}
+  html.mob .mossa h3{font-size:1.3rem}
+  html.mob .mossa .eq{font-size:1.6rem}
+  html.mob .errori{grid-template-columns:1fr;gap:.6rem;margin-top:1rem}
+  html.mob .errori div{font-size:1.05rem;padding:.7rem .9rem}
+  html.mob .tit-err{font-size:.8rem;margin:1.4rem 0 -.3rem}
+  /* 9 */
+  html.mob .tappa{font-size:.72rem;line-height:1.3}
+  html.mob .tappa b{flex:none}
+  html.mob .pezzo{font-size:1.1rem;min-height:6.2rem}
+  html.mob .pezzo small{font-size:.7rem;letter-spacing:.03em}
+  html.mob .opz button{font-size:1.1rem;padding:.7rem .2rem}
+  html.mob .aiuto{font-size:1rem;min-height:0}
+  html.mob .palco{display:block;flex:none}
+  html.mob .velo{font-size:1.15rem}
+  html.mob .sotto-palco{flex-wrap:wrap;justify-content:flex-end;gap:.6rem;min-height:0}
+  html.mob .sotto-palco .msg{flex:1 1 100%;font-size:1.02rem}
+  @media (max-width:419px){ html.mob .opz{grid-template-columns:1fr} }
+  @media (min-width:640px){
+    html.mob .dipende,html.mob .zeri3{grid-template-columns:1fr 1fr}
+    html.mob .ricetta{grid-template-columns:1fr 1fr}
+    html.mob .catena{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:.8rem 1.2rem}
+  }
+  /* nello schema che si costruisce il disegno resta fermo in alto mentre scorrono i passi */
+  @media (min-height:600px){
+    html.mob #s5 .stage>.eq{order:-2}
+    html.mob #svg5{order:-1;position:sticky;top:0;z-index:3;background:var(--fondo);box-shadow:0 .6rem .6rem -.6rem rgba(0,0,0,.3)}
+  }
+
   html.statico *{animation:none !important;transition:none !important}
 </style>
 </head>
@@ -295,7 +429,7 @@
   <div class="schermi">
 
     <!-- ============ 0 · COPERTINA ============ -->
-    <section class="screen" data-titolo="Copertina">
+    <section class="screen" id="s0" data-titolo="Copertina">
       <div class="cop">
         <div>
           <div class="kicker">Disequazioni · lezione alla lavagna</div>
@@ -321,7 +455,7 @@
     </section>
 
     <!-- ============ 1 · LA DOMANDA ============ -->
-    <section class="screen" data-titolo="La domanda">
+    <section class="screen" id="s1" data-titolo="La domanda">
       <header><div class="kicker"><b>1</b> La domanda</div><h2>Che cosa ci stanno chiedendo?</h2></header>
       <div class="body">
         <div class="testo">
@@ -329,7 +463,7 @@
           <p>Si chiama <b>fratta</b> perché la <i>x</i> compare anche al <b>denominatore</b>.</p>
           <p>La domanda è: <b>per quali <i>x</i> la frazione è positiva?</b></p>
           <p>Muovi il cursore. Non ci interessa <em>quanto</em> vale la frazione: ci interessa solo <b>che segno ha</b>.</p>
-          <div class="card scoperta passo" data-p="1">La frazione è <b class="pos">positiva</b> a sinistra di −1 e a destra di 3. Ma provare i numeri uno alla volta non finisce mai: <b>ci serve un metodo</b>.</div>
+          <div class="card scoperta passo m-fondo" data-p="1">La frazione è <b class="pos">positiva</b> a sinistra di −1 e a destra di 3. Ma provare i numeri uno alla volta non finisce mai: <b>ci serve un metodo</b>.</div>
         </div>
         <div class="stage">
           <div class="card calc">
@@ -347,7 +481,7 @@
     </section>
 
     <!-- ============ 2 · LA TRAPPOLA ============ -->
-    <section class="screen" data-titolo="La trappola">
+    <section class="screen" id="s2" data-titolo="La trappola">
       <header><div class="kicker"><b>2</b> La trappola</div><h2>Perché non moltiplico per il denominatore?</h2></header>
       <div class="body">
         <div class="testo">
@@ -380,7 +514,7 @@
     </section>
 
     <!-- ============ 3 · DUE SEGNI ============ -->
-    <section class="screen" data-titolo="Due segni">
+    <section class="screen" id="s3" data-titolo="Due segni">
       <header><div class="kicker"><b>3</b> L'idea</div><h2>Per il segno di una frazione bastano due segni</h2></header>
       <div class="body">
         <div class="testo">
@@ -412,27 +546,27 @@
     </section>
 
     <!-- ============ 4 · UN PEZZO ALLA VOLTA ============ -->
-    <section class="screen" data-titolo="Un pezzo alla volta">
+    <section class="screen" id="s4" data-titolo="Un pezzo alla volta">
       <header><div class="kicker"><b>4</b> Un pezzo alla volta</div><h2>Dove <i>x</i> − 3 è positivo?</h2></header>
       <div class="body">
         <div class="testo">
           <p>Ci servono due segni: quello di sopra e quello di sotto. Cominciamo da <span class="m"><i>x</i> − 3</span>.</p>
           <p>Disegno la retta <span class="m"><i>y</i> = <i>x</i> − 3</span>. Dove sta <b class="pos">sopra l'asse</b> il pezzo è positivo, dove sta <b class="neg">sotto</b> è negativo. In 3 vale zero.</p>
-          <p class="passo" data-p="1"><b>Schiaccio il disegno su una riga:</b> puntini e «−» dove è negativo, linea piena e «+» dove è positivo.</p>
-          <div class="card regola passo" data-p="2"><b>Senza disegno:</b> scrivo «pezzo &gt; 0» e risolvo.
+          <p class="passo m-fondo" data-p="1"><b>Schiaccio il disegno su una riga:</b> puntini e «−» dove è negativo, linea piena e «+» dove è positivo.</p>
+          <div class="card regola passo m-fondo" data-p="2"><b>Senza disegno:</b> scrivo «pezzo &gt; 0» e risolvo.
             <span class="m" style="display:block;font-size:1.5rem;margin:.25rem 0"><i>x</i> − 3 &gt; 0 <span class="freccia-t">→</span> <i>x</i> &gt; 3</span>
             Dove è vero metto <b class="pos">+</b>, da tutte le altre parti <b class="neg">−</b>.</div>
         </div>
         <div class="stage">
           <svg class="main" id="svg4" viewBox="0 0 1000 560"></svg>
           <div class="lettura m" id="let4"></div>
-          <div class="comandi"><div class="scorri" style="padding:0 calc(9% - 1.2rem)"><input type="range" id="x4" min="-2" max="8" step="0.5" value="6" aria-label="valore di x"></div></div>
+          <div class="comandi"><div class="scorri" id="sc4"><input type="range" id="x4" min="-2" max="8" step="0.5" value="5" aria-label="valore di x"></div></div>
         </div>
       </div>
     </section>
 
     <!-- ============ 5 · LO SCHEMA ============ -->
-    <section class="screen" data-titolo="Lo schema dei segni">
+    <section class="screen" id="s5" data-titolo="Lo schema dei segni">
       <header><div class="kicker"><b>5</b> Il metodo</div><h2>Lo schema dei segni</h2></header>
       <div class="body">
         <div class="testo">
@@ -453,14 +587,14 @@
     </section>
 
     <!-- ============ 6 · I BORDI ============ -->
-    <section class="screen" data-titolo="I bordi">
+    <section class="screen" id="s6" data-titolo="I bordi">
       <header><div class="kicker"><b>6</b> I bordi</div><h2>E i numeri sul confine: dentro o fuori?</h2></header>
       <div class="body">
         <div class="testo">
           <p><b>Lo schema non cambia mai.</b> Cambia solo che cosa raccolgo alla fine: prova i quattro versi.</p>
-          <div class="card passo" data-p="1"><span class="pallino pieno"></span><b>Zero del numeratore</b> (qui 3): lì la frazione vale 0. Lo prendo <b>solo se c'è l'uguale</b> (≥ oppure ≤).</div>
-          <div class="card passo" data-p="2"><span class="pallino"></span><b>Zero del denominatore</b> (qui −1): lì la frazione non esiste. <b>Non lo prendo mai</b>, nemmeno con l'uguale.</div>
-          <div class="card attenzione passo" data-p="3">Nello schema scrivo <b>sempre</b> «N &gt; 0» e «D &gt; 0», qualunque sia il verso. Il verso serve <b>solo alla fine</b>, per scegliere le zone.</div>
+          <div class="card passo m-fondo" data-p="1"><span class="pallino pieno"></span><b>Zero del numeratore</b> (qui 3): lì la frazione vale 0. Lo prendo <b>solo se c'è l'uguale</b> (≥ oppure ≤).</div>
+          <div class="card passo m-fondo" data-p="2"><span class="pallino"></span><b>Zero del denominatore</b> (qui −1): lì la frazione non esiste. <b>Non lo prendo mai</b>, nemmeno con l'uguale.</div>
+          <div class="card attenzione passo m-fondo" data-p="3">Nello schema scrivo <b>sempre</b> «N &gt; 0» e «D &gt; 0», qualunque sia il verso. Il verso serve <b>solo alla fine</b>, per scegliere le zone.</div>
         </div>
         <div class="stage">
           <div class="scegli">
@@ -477,7 +611,7 @@
     </section>
 
     <!-- ============ 7 · FORMA NORMALE ============ -->
-    <section class="screen" data-titolo="Se a destra non c'è zero">
+    <section class="screen" id="s7" data-titolo="Se a destra non c'è zero">
       <header><div class="kicker"><b>7</b> Prima di cominciare</div><h2>E se a destra non c'è lo zero?</h2></header>
       <div class="body">
         <div class="testo">
@@ -489,7 +623,7 @@
             <li class="passo" data-p="3"><b>Faccio i conti solo sopra.</b> Sotto non tocco niente.</li>
             <li class="passo" data-p="4">Ora è come le altre: <b>schema dei segni</b>.</li>
           </ol>
-          <div class="card attenzione passo" data-p="4">Vietato moltiplicare «in croce»: il denominatore resta dov'è.</div>
+          <div class="card attenzione passo m-fondo" data-p="4">Vietato moltiplicare «in croce»: il denominatore resta dov'è.</div>
         </div>
         <div class="stage">
           <div class="catena">
@@ -504,7 +638,7 @@
     </section>
 
     <!-- ============ 8 · LA RICETTA ============ -->
-    <section class="screen" data-titolo="La ricetta">
+    <section class="screen" id="s8" data-titolo="La ricetta">
       <header><div class="kicker"><b>8</b> In breve</div><h2>La ricetta in quattro mosse</h2></header>
       <div class="body unica">
         <div>
@@ -533,7 +667,7 @@
     </section>
 
     <!-- ============ 9 · PROVA TU ============ -->
-    <section class="screen" data-titolo="Prova tu">
+    <section class="screen" id="s9" data-titolo="Prova tu">
       <header><div class="kicker"><b>9</b> Tocca a voi</div><h2>Prova tu</h2></header>
       <div class="body">
         <div class="testo">
@@ -541,9 +675,9 @@
           <div class="card"><div class="eq" id="eq9"></div></div>
           <div class="tappa"><b>1</b> Studio i due pezzi: tocca per scoprire</div>
           <div class="pezzi"><button class="pezzo" id="pzN"></button><button class="pezzo" id="pzD"></button></div>
-          <div class="tappa"><b>3</b> Scelgo la risposta</div>
-          <div class="opz" id="opz9"></div>
-          <div class="aiuto" id="aiuto9"></div>
+          <div class="tappa m-fondo"><b>3</b> Scelgo la risposta</div>
+          <div class="opz m-fondo" id="opz9"></div>
+          <div class="aiuto m-fondo" id="aiuto9"></div>
         </div>
         <div class="stage">
           <div class="tappa"><b>2</b> Completo lo schema: tocca i «?» per scegliere il segno</div>
@@ -577,6 +711,8 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const par = new URLSearchParams(location.search);
 const STATICO = par.has('statico') || par.has('verifica');
 if (STATICO) document.documentElement.classList.add('statico');
+// MOB() (definita in testa alla pagina) dice se siamo nella versione a colonna; STRETTO() se è un telefono
+const STRETTO = () => MOB() && innerWidth < 640;
 
 /* ================= scrittura della matematica ================= */
 const IX = '<i>x</i>';
@@ -648,7 +784,7 @@ function gettone(g, cx, cy, r, tipo){
     el('line', {x1: cx - q, y1: cy + q, x2: cx + q, y2: cy - q, class: 'g-no'}, g);
   } else {
     el('circle', {cx, cy, r, class: 'c-q'}, g);
-    el('text', {x: cx, y: cy + 9, class: 's-q'}, g, '?');
+    el('text', {x: cx, y: cy + r * .37, class: 's-q', style: `font-size:${r * 1.1}px`}, g, '?');
   }
 }
 
@@ -659,12 +795,16 @@ function gettone(g, cx, cy, r, tipo){
   o.rel      se c'è, evidenzia la soluzione di N/D rel 0
   o.gioco    {celle:{N,D,F}, scosse, tocca(riga, i)}: i segni li sceglie chi sta alla lavagna
 */
-const GEO = {x0: 215, x1: 985, X: [472, 728], CX: [343.5, 600, 856.5],
-             asse: 92, zone: 131, N: 192, D: 280, sep: 334, F: 398, sol: 506};
+const GEO_L = {W: 1000, H: 540, x0: 215, x1: 985, X: [472, 728], CX: [343.5, 600, 856.5], semi: 110,
+               asse: 92, zone: 131, N: 192, D: 280, sep: 334, F: 398, sol: 506, alto: false};
+// sul telefono: più stretto e più alto, con il nome di ogni riga scritto sopra la riga
+const GEO_S = {W: 560, H: 545, x0: 18, x1: 548, X: [195, 371], CX: [106.5, 283, 459.5], semi: 84,
+               asse: 62, zone: 100, N: 182, D: 276, sep: 308, F: 396, sol: 516, alto: true};
 function schema(svg, N, D, o){
-  const A = analizza(N, D), G = GEO, gioco = o.gioco;
+  const A = analizza(N, D), G = STRETTO() ? GEO_S : GEO_L, gioco = o.gioco;
   const prima = svg._viste || new Set(), ora = new Set();
   svg.textContent = '';
+  svg.setAttribute('viewBox', `0 0 ${G.W} ${G.H}`);
   const gruppo = nome => { ora.add(nome); return el('g', {class: prima.has(nome) ? '' : 'appare'}, svg); };
   const iN = A.z[0].tipo === 'N' ? 0 : 1, iD = 1 - iN;
   const mostraZero = [false, false];
@@ -684,8 +824,9 @@ function schema(svg, N, D, o){
   });
   if (o.zone){
     const gz = gruppo('zone'), [a, b] = A.z.map(p => num(p.v));
-    [`<i>x</i> minore di ${a}`, `<i>x</i> tra ${a} e ${b}`, `<i>x</i> maggiore di ${b}`]
-      .forEach((t, i) => el('text', {x: G.CX[i], y: G.zone, class: 's-zona'}, gz, t));
+    (G.alto ? [`<i>x</i> &lt; ${a}`, `tra ${a} e ${b}`, `<i>x</i> &gt; ${b}`]
+            : [`<i>x</i> minore di ${a}`, `<i>x</i> tra ${a} e ${b}`, `<i>x</i> maggiore di ${b}`])
+      .forEach((t, i) => el('text', {x: G.CX[i], y: G.zone, class: 's-zona', style: G.alto ? 'font-size:23px' : ''}, gz, t));
   }
 
   // una riga: linea piena dove è positivo, puntini dove è negativo, un gettone per zona
@@ -700,12 +841,19 @@ function schema(svg, N, D, o){
       if (!gioco){ gettone(g, cx, y, r, segni[i] > 0 ? 'pos' : 'neg'); return; }
       const s = gioco.celle[nome][i];
       const c = el('g', {class: 'cella' + (gioco.scosse.has(nome + i) ? ' scossa' : '')}, g);
-      el('rect', {x: cx - 110, y: y - 40, width: 220, height: 80, fill: 'transparent'}, c);
+      el('rect', {x: cx - G.semi, y: y - 40, width: 2 * G.semi, height: 80, fill: 'transparent'}, c);
       gettone(c, cx, y, r + 3, s > 0 ? 'pos' : s < 0 ? 'neg' : 'q');
       c.addEventListener('click', () => gioco.tocca(nome, i));
     });
   }
   function etichetta(g, y, sigla, testo){
+    if (G.alto){
+      const yy = y - 50;
+      el('rect', {x: 18, y: yy - 18, width: 36, height: 36, rx: 9, class: 's-pill'}, g);
+      el('text', {x: 36, y: yy + 7, class: 's-etp', style: 'font-size:19px'}, g, sigla);
+      el('text', {x: 64, y: yy + 9, class: 's-et', style: 'font-size:27px'}, g, testo);
+      return;
+    }
     el('rect', {x: 16, y: y - 21, width: 42, height: 42, rx: 11, class: 's-pill'}, g);
     el('text', {x: 37, y: y + 8, class: 's-etp'}, g, sigla);
     el('text', {x: 72, y: y + 10, class: 's-et'}, g, testo);
@@ -725,25 +873,33 @@ function schema(svg, N, D, o){
   const sc = o.rel ? scelta(N, D, o.rel) : null;
   if (sc){
     const g = gruppo('banda');
-    sc.prese.forEach((p, i) => { if (p) el('rect', {x: G.CX[i] - 112, y: G.F - 40, width: 224, height: 80, rx: 18, class: 's-banda'}, g); });
+    sc.prese.forEach((p, i) => { if (p) el('rect', {x: G.CX[i] - G.semi - 2, y: G.F - 40, width: 2 * G.semi + 4, height: 80, rx: 18, class: 's-banda'}, g); });
   }
   if (o.F){
-    const g = gruppo('F');
+    const g = gruppo('F'), sans = 'font-family:var(--sans);font-weight:700;';
     el('line', {x1: 16, y1: G.sep, x2: G.x1, y2: G.sep, class: 's-sep'}, g);
-    el('rect', {x: 16, y: G.F - 33, width: 42, height: 66, rx: 11, class: 's-pill'}, g);
-    el('text', {x: 37, y: G.F - 7, class: 's-etp', style: 'font-size:19px'}, g, 'N');
-    el('line', {x1: 25, y1: G.F, x2: 49, y2: G.F, stroke: '#fff', 'stroke-width': 2.5}, g);
-    el('text', {x: 37, y: G.F + 22, class: 's-etp', style: 'font-size:19px'}, g, 'D');
-    el('text', {x: 72, y: G.F + 8, class: 's-et', style: 'font-family:var(--sans);font-size:23px;font-weight:700'}, g, 'frazione');
+    if (G.alto){
+      const yy = G.F - 60;
+      el('rect', {x: 18, y: yy - 18, width: 58, height: 36, rx: 9, class: 's-pill'}, g);
+      el('text', {x: 47, y: yy + 6, class: 's-etp', style: 'font-size:17px'}, g, 'N/D');
+      el('text', {x: 86, y: yy + 8, class: 's-et', style: sans + 'font-size:21px'}, g, 'frazione');
+    } else {
+      el('rect', {x: 16, y: G.F - 33, width: 42, height: 66, rx: 11, class: 's-pill'}, g);
+      el('text', {x: 37, y: G.F - 7, class: 's-etp', style: 'font-size:19px'}, g, 'N');
+      el('line', {x1: 25, y1: G.F, x2: 49, y2: G.F, stroke: '#fff', 'stroke-width': 2.5}, g);
+      el('text', {x: 37, y: G.F + 22, class: 's-etp', style: 'font-size:19px'}, g, 'D');
+      el('text', {x: 72, y: G.F + 8, class: 's-et', style: sans + 'font-size:23px'}, g, 'frazione');
+    }
     riga(g, G.F, A.sF, [0, 1], 27, 'F');
     gettone(g, G.X[iN], G.F, 17, 'zero');
     gettone(g, G.X[iD], G.F, 17, 'no');
-    el('text', {x: G.X[iN], y: G.F + 62, class: 's-nota'}, g, 'vale 0');
-    el('text', {x: G.X[iD], y: G.F + 62, class: 's-nota'}, g, 'non esiste');
+    const nota = G.alto ? 'font-size:21px' : '';
+    el('text', {x: G.X[iN], y: G.F + 62, class: 's-nota', style: nota}, g, 'vale 0');
+    el('text', {x: G.X[iD], y: G.F + 62, class: 's-nota', style: nota}, g, 'non esiste');
   }
   if (sc){
     const g = gruppo('sol'), y = G.sol;
-    el('text', {x: 16, y: y + 7, class: 's-solet'}, g, 'soluzione');
+    el('text', G.alto ? {x: 18, y: y - 22, class: 's-solet'} : {x: 16, y: y + 7, class: 's-solet'}, g, 'soluzione');
     el('line', {x1: G.x0, y1: y, x2: G.x1, y2: y, class: 's-solasse'}, g);
     const tratti = [[G.x0, G.X[0] - 14], [G.X[0] + 14, G.X[1] - 14], [G.X[1] + 14, G.x1 - 6]];
     sc.prese.forEach((p, i) => { if (p) el('line', {x1: tratti[i][0], y1: y, x2: tratti[i][1], y2: y, class: 's-sol'}, g); });
@@ -761,13 +917,19 @@ $$('[data-dis]').forEach(e => {
 /* ================= 1 · provare i numeri ================= */
 const E1 = {N: [1, -3], D: [1, 1]};
 const S1 = {x: 5, visti: new Set(), bande: false, giro: null};
-const px1 = x => 60 + (x + 6) * 880 / 14;
+// sul telefono meno numeri sulla retta, ma più grandi
+const G1 = () => STRETTO() ? {a: -4, b: 6, y: 215, yc: 110, r: 35, f: 38, H: 290}
+                           : {a: -6, b: 8, y: 205, yc: 127, r: 25, f: 27, H: 300};
+const px1 = x => { const g = G1(); return 60 + (x - g.a) * 880 / (g.b - g.a); };
 function tipo1(x){
   const n = E1.N[0] * x + E1.N[1], d = E1.D[0] * x + E1.D[1];
   return d === 0 ? 'no' : n === 0 ? 'zero' : n * d > 0 ? 'pos' : 'neg';
 }
 function colore(v){ return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; }
 function disegna1(){
+  const g1 = G1(), cursore = $('#x1');
+  S1.x = Math.max(g1.a, Math.min(g1.b, S1.x));
+  cursore.min = g1.a; cursore.max = g1.b; cursore.value = S1.x;
   const x = S1.x, n = x - 3, d = x + 1, t = tipo1(x);
   S1.visti.add(x);
   $('#c1x').innerHTML = num(x);
@@ -778,38 +940,42 @@ function disegna1(){
     neg: '<span class="chip neg">−</span><span>negativa<small>segni diversi</small></span>',
     zero: '<span class="chip zero">0</span><span>vale zero<small>né positiva né negativa</small></span>',
     no: '<span class="chip no">✕</span><span>non esiste<small>non si divide per zero</small></span>'}[t];
-  const svg = $('#svg1'), y = 205, yc = y - 78;
+  const svg = $('#svg1'), {y, yc, r, f} = g1;
   svg.textContent = '';
+  svg.setAttribute('viewBox', `0 0 1000 ${g1.H}`);
+  svg.style.aspectRatio = `1000/${g1.H}`;
   if (S1.bande){
     // le tre zone, colorate dietro ai gettoni
     const g = el('g', {class: 'appare'}, svg);
-    [[20, px1(-1) - 30, 'pos'], [px1(-1) + 30, px1(3) - 30, 'neg'], [px1(3) + 30, 980, 'pos']].forEach(([da, a, c]) =>
-      el('rect', {x: da, y: yc - 40, width: a - da, height: 80, rx: 40, style: `fill:var(--${c}-c)`}, g));
+    [[20, px1(-1) - r - 5, 'pos'], [px1(-1) + r + 5, px1(3) - r - 5, 'neg'], [px1(3) + r + 5, 980, 'pos']].forEach(([da, a, c]) =>
+      el('rect', {x: da, y: yc - r - 15, width: a - da, height: 2 * r + 30, rx: r + 15, style: `fill:var(--${c}-c)`}, g));
   }
   el('line', {x1: 30, y1: y, x2: 962, y2: y, class: 's-asse'}, svg);
   el('path', {d: `M975 ${y} l-18 -9 v18 z`, class: 's-punta'}, svg);
-  for (let k = -6; k <= 8; k++){
+  for (let k = g1.a; k <= g1.b; k++){
     const X = px1(k);
     el('line', {x1: X, y1: y - 10, x2: X, y2: y + 10, class: 's-asse'}, svg);
-    el('text', {x: X, y: y + 50, class: 'p-num', style: `font-size:27px;font-weight:${k === x ? 800 : 600};fill:var(--${k === x ? 'ink' : 'muted'})`}, svg, num(k));
-    if (S1.visti.has(k) || S1.bande) gettone(svg, X, yc, 25, tipo1(k));
+    el('text', {x: X, y: y + f + 23, class: 'p-num', style: `font-size:${f}px;font-weight:${k === x ? 800 : 600};fill:var(--${k === x ? 'ink' : 'muted'})`}, svg, num(k));
+    if (S1.visti.has(k) || S1.bande) gettone(svg, X, yc, r, tipo1(k));
   }
-  el('path', {d: `M${px1(x)} ${yc - 36} l-13 -20 h26 z`, class: 's-punta'}, svg);
-  el('circle', {cx: px1(x), cy: yc, r: 31, fill: 'none', stroke: 'var(--ink)', 'stroke-width': 3}, svg);
-  el('line', {x1: px1(x), y1: yc + 31, x2: px1(x), y2: y - 10, stroke: 'var(--ink)', 'stroke-width': 3}, svg);
+  el('path', {d: `M${px1(x)} ${yc - r - 11} l-13 -20 h26 z`, class: 's-punta'}, svg);
+  el('circle', {cx: px1(x), cy: yc, r: r + 6, fill: 'none', stroke: 'var(--ink)', 'stroke-width': 3}, svg);
+  el('line', {x1: px1(x), y1: yc + r + 6, x2: px1(x), y2: y - 10, stroke: 'var(--ink)', 'stroke-width': 3}, svg);
 }
-function metti1(x){ S1.x = Math.max(-6, Math.min(8, Math.round(x))); $('#x1').value = S1.x; disegna1(); }
+function metti1(x){ S1.x = Math.round(x); disegna1(); }
 $('#x1').addEventListener('input', e => { clearTimeout(S1.giro); metti1(+e.target.value); });
-$('#svg1').addEventListener('pointerdown', e => {
-  const r = e.currentTarget.getBoundingClientRect();
+// «click» e non «pointerdown»: sul telefono un dito che scorre la pagina non deve spostare il numero
+$('#svg1').addEventListener('click', e => {
+  const r = e.currentTarget.getBoundingClientRect(), g = G1();
   clearTimeout(S1.giro);
-  metti1(((e.clientX - r.left) / r.width * 1000 - 60) / (880 / 14) - 6);
+  metti1(((e.clientX - r.left) / r.width * 1000 - 60) / (880 / (g.b - g.a)) + g.a);
 });
 $('#tutti1').addEventListener('click', () => {
   clearTimeout(S1.giro);
-  let k = -6;
-  if (STATICO){ for (; k <= 8; k++) metti1(k); return; }
-  (function passo(){ metti1(k); if (++k <= 8) S1.giro = setTimeout(passo, 330); })();
+  const g = G1();
+  let k = g.a;
+  if (STATICO){ for (; k <= g.b; k++) metti1(k); return; }
+  (function passo(){ metti1(k); if (++k <= g.b) S1.giro = setTimeout(passo, 330); })();
 });
 
 /* ================= 3 · la macchina dei due segni ================= */
@@ -833,46 +999,61 @@ $$('[data-n]').forEach(b => b.addEventListener('click', () => { S3.n = +b.datase
 $$('[data-d]').forEach(b => b.addEventListener('click', () => { S3.d = +b.dataset.d; disegna3(); }));
 
 /* ================= 4 · il segno di un pezzo, dalla retta alla riga ================= */
-const S4 = {x: 6, riga: false};
-const PX = x => 90 + (x + 2) * 82, PY = y => 215 - y * 36;
+const S4 = {x: 5, riga: false};
+// il piano: da −2 a 8 sulla LIM; sul telefono da 0 a 6, con tutto più grande (f ingrandisce scritte e tratti)
+const P4 = () => STRETTO() ? {xa: 0, xb: 6, ox: 60, ux: 147, oy: 330, uy: 100, riga: 790, H: 900, f: 1.9, corto: true}
+                           : {xa: -2, xb: 8, ox: 90, ux: 82, oy: 215, uy: 36, riga: 500, H: 560, f: 1, corto: false};
 function disegna4(){
-  const svg = $('#svg4'), x = S4.x, v = x - 3;
-  const prima = svg._riga;
+  const P = P4(), f = P.f, svg = $('#svg4'), cursore = $('#x4');
+  const PX = x => P.ox + (x - P.xa) * P.ux, PY = y => P.oy - y * P.uy, ya = P.xa - 3, yb = P.xb - 3;
+  S4.x = Math.max(P.xa, Math.min(P.xb, S4.x));
+  cursore.min = P.xa; cursore.max = P.xb; cursore.value = S4.x;
+  $('#sc4').style.padding = `0 calc(${P.ox / 10}% - 1.2rem)`;
+  const x = S4.x, v = x - 3, prima = svg._riga;
   svg.textContent = '';
-  for (let k = -2; k <= 8; k++) el('line', {x1: PX(k), y1: PY(5), x2: PX(k), y2: PY(-5), class: 'p-griglia'}, svg);
-  for (let k = -5; k <= 5; k++) el('line', {x1: PX(-2), y1: PY(k), x2: PX(8), y2: PY(k), class: 'p-griglia'}, svg);
-  el('path', {d: `M${PX(-2)} ${PY(0)} L${PX(3)} ${PY(0)} L${PX(-2)} ${PY(-5)} z`, class: 'p-tri-neg'}, svg);
-  el('path', {d: `M${PX(3)} ${PY(0)} L${PX(8)} ${PY(0)} L${PX(8)} ${PY(5)} z`, class: 'p-tri-pos'}, svg);
-  el('line', {x1: PX(-2) - 20, y1: PY(0), x2: PX(8) + 28, y2: PY(0), class: 'p-asse'}, svg);
-  el('path', {d: `M${PX(8) + 42} ${PY(0)} l-18 -9 v18 z`, class: 's-punta'}, svg);
-  el('line', {x1: PX(0), y1: PY(-5) + 8, x2: PX(0), y2: PY(5) - 14, class: 'p-asse'}, svg);
-  el('path', {d: `M${PX(0)} ${PY(5) - 28} l-9 18 h18 z`, class: 's-punta'}, svg);
-  el('text', {x: PX(8) + 40, y: PY(0) + 34, class: 'p-retta'}, svg, '<i>x</i>');
-  el('text', {x: PX(0) + 16, y: PY(5) - 12, class: 'p-retta'}, svg, '<i>y</i>');
-  for (let k = -2; k <= 8; k++) if (k !== 0)
-    el('text', {x: PX(k) + (k === 3 ? 22 : 0), y: PY(0) + (k < 3 ? -13 : 30), class: 'p-num',
-                style: k === 3 ? 'font-size:28px;font-weight:800;fill:var(--ink)' : 'font-size:20px'}, svg, num(k));
-  el('text', {x: PX(-.4), y: PY(-1.5), class: 'p-par', style: 'fill:var(--neg-s)'}, svg, 'sotto: negativo');
-  el('text', {x: PX(6.4), y: PY(1.1), class: 'p-par', style: 'fill:var(--pos-s)'}, svg, 'sopra: positivo');
-  el('line', {x1: PX(-2), y1: PY(-5), x2: PX(3), y2: PY(0), stroke: 'var(--neg)', 'stroke-width': 6, 'stroke-linecap': 'round'}, svg);
-  el('line', {x1: PX(3), y1: PY(0), x2: PX(8), y2: PY(5), stroke: 'var(--pos)', 'stroke-width': 6, 'stroke-linecap': 'round'}, svg);
-  el('text', {x: PX(4.9), y: PY(4.1), class: 'p-retta', 'text-anchor': 'end'}, svg, '<i>y</i> = <i>x</i> − 3');
+  svg.setAttribute('viewBox', `0 0 1000 ${P.H}`);
+  for (let k = P.xa; k <= P.xb; k++) el('line', {x1: PX(k), y1: PY(yb), x2: PX(k), y2: PY(ya), class: 'p-griglia'}, svg);
+  for (let k = ya; k <= yb; k++) el('line', {x1: PX(P.xa), y1: PY(k), x2: PX(P.xb), y2: PY(k), class: 'p-griglia'}, svg);
+  el('path', {d: `M${PX(P.xa)} ${PY(0)} L${PX(3)} ${PY(0)} L${PX(P.xa)} ${PY(ya)} z`, class: 'p-tri-neg'}, svg);
+  el('path', {d: `M${PX(3)} ${PY(0)} L${PX(P.xb)} ${PY(0)} L${PX(P.xb)} ${PY(yb)} z`, class: 'p-tri-pos'}, svg);
+  el('line', {x1: PX(P.xa) - 20, y1: PY(0), x2: PX(P.xb) + 28, y2: PY(0), class: 'p-asse'}, svg);
+  el('path', {d: `M${PX(P.xb) + 42} ${PY(0)} l-18 -9 v18 z`, class: 's-punta'}, svg);
+  el('line', {x1: PX(0), y1: PY(ya) + 8, x2: PX(0), y2: PY(yb) - 14, class: 'p-asse'}, svg);
+  el('path', {d: `M${PX(0)} ${PY(yb) - 28} l-9 18 h18 z`, class: 's-punta'}, svg);
+  const retta = `font-size:${26 * f}px`;
+  el('text', {x: PX(P.xb) + (P.corto ? 12 : 40), y: PY(0) + (P.corto ? -14 : 34) * f, class: 'p-retta', style: retta}, svg, '<i>x</i>');
+  el('text', {x: PX(0) + 16, y: PY(yb) + (P.corto ? 34 : -12), class: 'p-retta', style: retta}, svg, '<i>y</i>');
+  for (let k = P.xa; k <= P.xb; k++) if (k !== 0)
+    el('text', {x: PX(k) + (k === 3 ? (P.corto ? 33 : 26) * f : 0), y: PY(0) + (k < 3 ? -13 : 30) * f, class: 'p-num',
+                style: k === 3 ? `font-size:${28 * f}px;font-weight:800;fill:var(--ink)` : `font-size:${20 * f}px`}, svg, num(k));
+  const parola = c => `font-size:${23 * f}px;fill:var(--${c}-s)`;
+  if (P.corto){
+    el('text', {x: PX(.95), y: PY(-.95), class: 'p-par', style: parola('neg')}, svg, 'negativo');
+    el('text', {x: PX(5.1), y: PY(.62), class: 'p-par', style: parola('pos')}, svg, 'positivo');
+  } else {
+    el('text', {x: PX(-.4), y: PY(-1.5), class: 'p-par', style: parola('neg')}, svg, 'sotto: negativo');
+    el('text', {x: PX(6.4), y: PY(1.1), class: 'p-par', style: parola('pos')}, svg, 'sopra: positivo');
+  }
+  el('line', {x1: PX(P.xa), y1: PY(ya), x2: PX(3), y2: PY(0), stroke: 'var(--neg)', 'stroke-width': 6 * f, 'stroke-linecap': 'round'}, svg);
+  el('line', {x1: PX(3), y1: PY(0), x2: PX(P.xb), y2: PY(yb), stroke: 'var(--pos)', 'stroke-width': 6 * f, 'stroke-linecap': 'round'}, svg);
+  el('text', P.corto ? {x: PX(4.25), y: PY(2.3), class: 'p-retta', style: retta, 'text-anchor': 'end'}
+                     : {x: PX(4.9), y: PY(4.1), class: 'p-retta', 'text-anchor': 'end'}, svg, '<i>y</i> = <i>x</i> − 3');
   // il punto che si muove
   const col = v > 0 ? 'var(--pos)' : v < 0 ? 'var(--neg)' : 'var(--ink)';
-  el('line', {x1: PX(x), y1: PY(0), x2: PX(x), y2: PY(v), stroke: col, 'stroke-width': 5, 'stroke-dasharray': '2 9', 'stroke-linecap': 'round'}, svg);
-  gettone(svg, PX(3), PY(0), 13, 'zero');
-  el('circle', {cx: PX(x), cy: PY(v), r: 13, fill: col, stroke: '#fff', 'stroke-width': 4}, svg);
+  el('line', {x1: PX(x), y1: PY(0), x2: PX(x), y2: PY(v), stroke: col, 'stroke-width': 5 * f, 'stroke-dasharray': `2 ${9 * f}`, 'stroke-linecap': 'round'}, svg);
+  gettone(svg, PX(3), PY(0), 13 * f, 'zero');
+  el('circle', {cx: PX(x), cy: PY(v), r: 13 * f, fill: col, stroke: '#fff', 'stroke-width': 4 * f}, svg);
   // la riga dei segni, sotto il disegno e allineata con l'asse
   if (S4.riga){
-    const g = el('g', {class: prima ? '' : 'appare'}, svg), y = 500;
-    el('line', {x1: PX(3), y1: PY(0) + 16, x2: PX(3), y2: y - 20, class: 's-guida', 'stroke-dasharray': '5 6'}, g);
-    el('text', {x: PX(-2), y: y - 44, class: 's-solet', style: 'fill:var(--ink)'}, g, 'il segno di <i>x</i> − 3, in una riga');
-    el('line', {x1: PX(-2), y1: y, x2: PX(3) - 30, y2: y, class: 's-neg'}, g);
-    el('line', {x1: PX(3) + 30, y1: y, x2: PX(8), y2: y, class: 's-pos'}, g);
-    gettone(g, PX(.5), y, 23, 'neg');
-    gettone(g, PX(5.5), y, 23, 'pos');
-    gettone(g, PX(3), y, 17, 'zero');
-    el('text', {x: PX(3), y: y + 52, class: 's-num', style: 'font-size:30px'}, g, '3');
+    const g = el('g', {class: prima ? '' : 'appare'}, svg), y = P.riga;
+    el('line', {x1: PX(3), y1: PY(0) + 16 * f, x2: PX(3), y2: y - 20 * f, class: 's-guida', 'stroke-dasharray': '5 6'}, g);
+    el('text', {x: PX(P.xa), y: y - 44 * f, class: 's-solet', style: `fill:var(--ink);font-size:${21 * f}px`}, g, 'il segno di <i>x</i> − 3, in una riga');
+    el('line', {x1: PX(P.xa), y1: y, x2: PX(3) - 30 * f, y2: y, class: 's-neg', style: `stroke-width:${8 * f}px;stroke-dasharray:${3 * f} ${19 * f}`}, g);
+    el('line', {x1: PX(3) + 30 * f, y1: y, x2: PX(P.xb), y2: y, class: 's-pos', style: `stroke-width:${8 * f}px`}, g);
+    gettone(g, PX((P.xa + 3) / 2), y, 23 * f, 'neg');
+    gettone(g, PX((3 + P.xb) / 2), y, 23 * f, 'pos');
+    gettone(g, PX(3), y, 17 * f, 'zero');
+    el('text', {x: PX(3), y: y + 52 * f, class: 's-num', style: `font-size:${30 * f}px`}, g, '3');
   }
   svg._riga = S4.riga;
   $('#let4').innerHTML = `<i>x</i> = ${num(x)} <span class="freccia-t">→</span> <i>x</i> − 3 = <b class="${colore(v)}">${num(v)}</b> ` +
@@ -941,7 +1122,7 @@ function disegna9(){
     `<button class="m ${st.scelta === k ? (k === e.giusta ? 'giusta' : 'sbagliata') : ''}" data-k="${k}">${t}</button>`).join('');
   $$('#opz9 button').forEach(b => b.addEventListener('click', () => { st.scelta = +b.dataset.k; if (st.scelta === e.giusta) st.fatto = st.n = st.d = true; disegna9(); }));
   const a = $('#aiuto9');
-  a.className = 'aiuto ' + (giusto ? 'ok' : 'ko');
+  a.className = 'aiuto m-fondo ' + (giusto ? 'ok' : 'ko');
   a.innerHTML = st.scelta === null ? '' : giusto ? '✓ Esatto! Guarda la soluzione sulla retta, in fondo allo schema.' : '✗ ' + e.aiuti[st.scelta];
 }
 $('#pzN').addEventListener('click', () => { stato[es].n = true; disegna9(); });
@@ -958,6 +1139,7 @@ $('#controlla9').addEventListener('click', () => {
   else st.msg = errate ? `<span class="pos">${errate === 1 ? 'Un segno è da rivedere: l\'ho rimesso' : errate + ' segni sono da rivedere: li ho rimessi'} a «?».</span>`
                        : `<span class="grigio">Mancano ancora ${vuote === 1 ? 'un segno' : vuote + ' segni'}.</span>`;
   disegna9();
+  if (st.fatto && MOB()) $('#opz9').scrollIntoView({behavior: STATICO ? 'auto' : 'smooth', block: 'center'});
 });
 
 /* ================= schermate, passi, navigazione ================= */
@@ -980,7 +1162,7 @@ $('#sol7').innerHTML = soluzione([1, 2], [1, -1], '>');
 $('#pallini').innerHTML = schermi.map((s, i) => `<button data-i="${i}" aria-label="${s.dataset.titolo}" title="${s.dataset.titolo}"></button>`).join('');
 $$('#pallini button').forEach(b => b.addEventListener('click', () => vai(+b.dataset.i, 0)));
 
-function applica(){
+function applica(muovi){
   const s = schermi[cur], p = passi[cur];
   schermi.forEach((x, i) => x.classList.toggle('active', i === cur));
   $$('.passo', s).forEach(e => { e.classList.toggle('su', +e.dataset.p <= p); e.classList.toggle('ora', +e.dataset.p === p); });
@@ -990,13 +1172,21 @@ function applica(){
     (maxP[cur] ? `<span class="tacche">${Array.from({length: maxP[cur]}, (_, k) => `<span class="${k < p ? 'su' : ''}"></span>`).join('')}</span>` : '');
   $('#ind').disabled = cur === 0 && p === 0;
   $('#av').disabled = cur === schermi.length - 1 && p === maxP[cur];
+  if (!MOB()) return;
+  if (muovi === 'schermo') $('.schermi').scrollTop = 0;
+  if (muovi === 'passo'){
+    // tra i pezzi appena comparsi si segue quello più in basso; se il disegno è fermo in alto, lo si lascia libero
+    const nuovi = $$('.passo.ora', s).sort((a, b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top);
+    const fermo = cur === 5 && getComputedStyle($('#svg5')).position === 'sticky';
+    if (nuovi[0]) nuovi[0].scrollIntoView({behavior: STATICO ? 'auto' : 'smooth', block: fermo ? 'end' : 'center'});
+  }
 }
 function vai(i, p){
   cur = Math.max(0, Math.min(schermi.length - 1, i));
   if (p !== undefined) passi[cur] = Math.max(0, Math.min(maxP[cur], p));
-  applica();
+  applica('schermo');
 }
-function avanti(){ if (passi[cur] < maxP[cur]){ passi[cur]++; applica(); } else if (cur < schermi.length - 1) vai(cur + 1, 0); }
+function avanti(){ if (passi[cur] < maxP[cur]){ passi[cur]++; applica('passo'); } else if (cur < schermi.length - 1) vai(cur + 1, 0); }
 function indietro(){ if (passi[cur] > 0){ passi[cur]--; applica(); } else if (cur > 0) vai(cur - 1, maxP[cur - 1]); }
 $('#av').addEventListener('click', avanti);
 $('#ind').addEventListener('click', indietro);
@@ -1017,22 +1207,29 @@ if (par.has('e')) es = Math.max(0, Math.min(ES.length - 1, (+par.get('e') || 1) 
 if (par.has('risolto')){ const st = stato[es]; st.fatto = st.n = st.d = true; st.scelta = ES[es].giusta; }
 vai((+par.get('d') || 1) - 1, par.has('p') ? +par.get('p') : undefined);
 
+let forma = MOB() + '/' + STRETTO();
+window.addEventListener('resize', () => {
+  const f = MOB() + '/' + STRETTO();
+  if (f !== forma){ forma = f; applica(); }
+});
+
 if (par.has('verifica')){
   const guai = [];
   const misura = sigla => {
-    const s = schermi[cur], R = s.getBoundingClientRect();
+    const s = schermi[cur], R = s.getBoundingClientRect(), mob = MOB();
+    if (mob && $('.schermi').scrollWidth > $('.schermi').clientWidth + 1) guai.push(sigla + ' la pagina scorre di lato');
     $$('*', s).forEach(e => {
       if (!(e instanceof HTMLElement) && e.tagName !== 'svg') return;
       const r = e.getBoundingClientRect();
       if (!r.width || !r.height) return;
-      if (r.bottom > R.bottom + 1 || r.right > R.right + 1 || r.left < R.left - 1)
+      if ((!mob && r.bottom > R.bottom + 1) || r.right > R.right + 1 || r.left < R.left - 1)
         guai.push(`${sigla} fuori: ${e.tagName.toLowerCase()}.${String(e.className.baseVal ?? e.className).split(' ')[0]}`);
-      if (e instanceof HTMLElement && e.matches('.card,.btn,.opz button,.pezzo,.mossa,.testo,.stage,.riga2 span,.eq,.calc>div') &&
-          (e.scrollHeight > e.clientHeight + (e.matches('.eq,.calc>div') ? 8 : 2) || e.scrollWidth > e.clientWidth + 2))
+      if (e instanceof HTMLElement && e.matches('.card,.btn,.opz button,.pezzo,.mossa,.testo,.stage,.riga2 span,.eq,.calc>div,.quattro div,.per,.leva,.esito3') &&
+          ((!mob && e.scrollHeight > e.clientHeight + (e.matches('.eq,.calc>div') ? 8 : 2)) || e.scrollWidth > e.clientWidth + 2))
         guai.push(`${sigla} stretto: ${e.className.split(' ')[0]} ${e.scrollWidth}×${e.scrollHeight} in ${e.clientWidth}×${e.clientHeight}`);
     });
     // i blocchi della colonna di testo non devono accavallarsi
-    $$('.testo', s).forEach(t => { if (t.lastElementChild && t.lastElementChild.getBoundingClientRect().bottom > t.getBoundingClientRect().bottom + 1) guai.push(sigla + ' testo troppo lungo'); });
+    if (!mob) $$('.testo', s).forEach(t => { if (t.lastElementChild && t.lastElementChild.getBoundingClientRect().bottom > t.getBoundingClientRect().bottom + 1) guai.push(sigla + ' testo troppo lungo'); });
   };
   schermi.forEach((_, i) => {
     vai(i, maxP[i]);
@@ -1048,7 +1245,7 @@ if (par.has('verifica')){
     if (e.opz[e.giusta] !== soluzione(e.N, e.D, e.rel)) guai.push(`es${k + 1}: la risposta segnata come giusta non è la soluzione`);
     if (new Set(e.opz).size !== 4) guai.push(`es${k + 1}: opzioni doppie`);
   });
-  document.title = guai.length ? 'GUAI ' + [...new Set(guai)].join(' | ') : 'VERIFICA OK';
+  document.title = (guai.length ? 'GUAI ' + [...new Set(guai)].join(' | ') : 'VERIFICA OK') + (MOB() ? (STRETTO() ? ' (telefono)' : ' (colonna)') : ' (LIM)');
 }
 </script>
 </body>
